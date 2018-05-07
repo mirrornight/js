@@ -27,15 +27,21 @@ var Board = function() {
         y: 500,
         speed: 8,
     }
-    o.moveLeft = function() {
-        if (o.x >= 0) {
-            o.x -= o.speed;
+    o.move = function(x) {
+        if (o.x < 0) {
+            o.x = 0;
+        } else if (o.x > 800 - o.image.width) {
+            o.x = 800 - o.image.width;
+        } else {
+            o.x = x;
         }
+
+    }
+    o.moveLeft = function() {
+        o.move(o.x - o.speed);
     }
     o.moveRight = function() {
-        if (o.x <= 800 - o.image.width) {
-            o.x += o.speed;
-        }
+        o.move(o.x + o.speed);
     }
     o.collide = function(ball) {
         if ((ball.y + ball.image.height) > o.y) {
@@ -74,7 +80,39 @@ var Ball = function() {
     o.fire = function() {
         o.fired = true;
     }
+    o.rebound = function() {
+        o.speedY *= -1;
+    }
     return o;
+}
+
+var Brick = function() {
+    var image = imageFormPath('brick.png');
+    var o = {
+        image: image,
+        x: 0,
+        y: 0,
+        w: 130,
+        h: 20,
+        alive: true,
+    }
+    o.kill = function(){
+        o.alive = false;
+    }
+    o.collide = function(b) {
+        return o.alive && (rectIntersects(o, b) || rectIntersects(b, o))
+    }
+    return o;
+}
+
+// 矩形相交
+var rectIntersects = function(a, b) {
+    if (b.y  > a.y && b.y < a.y + a.image.height) {
+        if (b.x > a.x && b.x < a.x + a.image.width) {
+            return true;
+        }
+    }
+    return false;
 }
 
 var GuaGame = function() {
@@ -123,6 +161,14 @@ var __main = function() {
     var game = GuaGame();
     var board = Board();
     var ball = Ball();
+    var bricks = [];
+    for (var i = 0; i < 6; i++) {
+        var b = Brick();
+        b.x += 130 * i;
+        b.y = 100;
+        bricks.push(b);
+    }
+    
 
     game.registerAction('a', function(){
         board.moveLeft();
@@ -137,14 +183,26 @@ var __main = function() {
     game.updata = function() {
         ball.move();
         if (board.collide(ball)) {
-            ball.speedY *= -1;
-            ball.speedX *= -1;
+            ball.rebound();
         }
+        for (var i = 0; i < bricks.length; i++) {
+            if (bricks[i].collide(ball)) {
+                console.log('砖与球相撞');
+                bricks[i].kill();
+                ball.rebound();
+            }
+        }
+        
     }
 
     game.draw = function() {
         game.drawImage(board);
         game.drawImage(ball);
+        for (var i = 0; i < bricks.length; i++) {
+            if (bricks[i].alive) {
+                game.drawImage(bricks[i]);
+            }
+        }
     }
 }
 
