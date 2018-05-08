@@ -8,157 +8,18 @@
                 border: 1px black solid;
             }
         </style>
+        <script src="utilities.js"></script>
+        <script src="guagame.js"></script>
+        <script src="ball.js"></script>
+        <script src="board.js"></script>
+        <script src="brick.js"></script>
     </head>
     <body>
         <canvas id="id-canvas" width="800" height="600"></canvas>
 <script>
-var imageFormPath = function(path) {
-    var img = new Image();
-    img.src = path;
-    return img;
-}
-
-// 改为对象
-var Board = function() {
-    var image = imageFormPath('board.png');
-    var o = {
-        image: image,
-        x: 200,
-        y: 500,
-        speed: 8,
-    }
-    o.move = function(x) {
-        if (o.x < 0) {
-            o.x = 0;
-        } else if (o.x > 800 - o.image.width) {
-            o.x = 800 - o.image.width;
-        } else {
-            o.x = x;
-        }
-
-    }
-    o.moveLeft = function() {
-        o.move(o.x - o.speed);
-    }
-    o.moveRight = function() {
-        o.move(o.x + o.speed);
-    }
-    o.collide = function(ball) {
-        if ((ball.y + ball.image.height) > o.y) {
-            if (ball.x > o.x && ball.x < o.x + o.image.width) {
-                return true;
-            }
-        }
-        return false
-    }
-    return o;
-}
-
-var Ball = function() {
-    var image = imageFormPath('ball.png');
-    var o = {
-        image: image,
-        x: 200,
-        y: 500,
-        speedX: 10,
-        speedY: 10,
-        fired: false,
-    }
-    o.move = function() {
-        if (o.fired) {
-            // console.log('move');
-            if (o.x < 0 || o.x > 800) {
-                o.speedX *= -1;
-            }
-            if (o.y < 0 || o.y > 600) {
-                o.speedY *= -1;
-            }
-            o.x += o.speedX;
-            o.y += o.speedY;
-        }
-    }
-    o.fire = function() {
-        o.fired = true;
-    }
-    o.rebound = function() {
-        o.speedY *= -1;
-    }
-    return o;
-}
-
-var Brick = function() {
-    var image = imageFormPath('brick.png');
-    var o = {
-        image: image,
-        x: 0,
-        y: 0,
-        w: 130,
-        h: 20,
-        alive: true,
-    }
-    o.kill = function(){
-        o.alive = false;
-    }
-    o.collide = function(b) {
-        return o.alive && (rectIntersects(o, b) || rectIntersects(b, o))
-    }
-    return o;
-}
-
-// 矩形相交
-var rectIntersects = function(a, b) {
-    if (b.y  > a.y && b.y < a.y + a.image.height) {
-        if (b.x > a.x && b.x < a.x + a.image.width) {
-            return true;
-        }
-    }
-    return false;
-}
-
-var GuaGame = function() {
-    var g = {
-        actions: {},
-        keydowns: {},
-    }
-    var canvas = document.querySelector('#id-canvas');
-    var context = canvas.getContext('2d');
-    g.canvas = canvas;
-    g.context = context;
-
-    //draw不清晰
-    g.drawImage = function(guaImage) {
-        g.context.drawImage(guaImage.image, guaImage.x , guaImage.y);
-    }
-
-    //events
-    window.addEventListener('keydown', function(event){
-        g.keydowns[event.key] = true;
-    })
-    window.addEventListener('keyup', function(event){
-        g.keydowns[event.key] = false;
-    })
-    g.registerAction = function(key, callback) {
-        g.actions[key] = callback;
-    }
-    // timer
-    setInterval(function(){
-        var actions = Object.keys(g.actions);
-        for (var i = 0; i < actions.length; i++) {
-            var key = actions[i];
-            if (g.keydowns[key]) {
-                g.actions[key]();
-            }
-        }
-        g.updata();
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        g.draw();
-    }, 1000/60)
-
-    return g;
-}
-
 var __main = function() {
-    var game = GuaGame();
+    var paused = false;
+    var game = GuaGame(60);
     var board = Board();
     var ball = Ball();
     var bricks = [];
@@ -179,8 +40,16 @@ var __main = function() {
     game.registerAction('f', function(){
         ball.fire();
     })
+    window.addEventListener('keydown', function(event){
+        if (event.key == 'p') {
+            paused = !paused;
+        }
+    })
 
     game.updata = function() {
+        if (paused) {
+            return;
+        }
         ball.move();
         if (board.collide(ball)) {
             ball.rebound();
