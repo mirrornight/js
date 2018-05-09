@@ -13,22 +13,54 @@
         <script src="ball.js"></script>
         <script src="board.js"></script>
         <script src="brick.js"></script>
+        <script src="level.js"></script>
     </head>
     <body>
         <canvas id="id-canvas" width="800" height="600"></canvas>
+        <hr>
+        <input id=id-input-speed type="range" value="1">
 <script>
+var loadLevel = function(n) {
+    n = n -1;
+    var level = levels[n];
+    var bricks = [];
+    for (var i = 0; i < level.length; i++) {
+        var p = level[i];
+        var b = Brick(p);
+        bricks.push(b);
+    }
+    return bricks;
+}
+
+//这里写的不好
+var enableDebugMode = function(enable) {
+    if (!enable) {
+        return;
+    }
+    window.addEventListener('keydown', function(event){
+        if (event.key == 'p') {
+            paused = !paused;
+        } else if ('123456789'.includes(event.key)) {
+            bricks = loadLevel(Number(event.key));
+        }
+    })
+    // 控制速度
+    document.querySelector('#id-input-speed').addEventListener('input', function() {
+        var input = event.target;
+        console.log(input.value);
+        window.fps = Number(input.value);
+    })
+}
+
+var bricks = loadLevel(1);
+var paused = false;
+
 var __main = function() {
-    var paused = false;
+    enableDebugMode(true);
+    
     var game = GuaGame(60);
     var board = Board();
     var ball = Ball();
-    var bricks = [];
-    for (var i = 0; i < 6; i++) {
-        var b = Brick();
-        b.x += 130 * i;
-        b.y = 100;
-        bricks.push(b);
-    }
     
 
     game.registerAction('a', function(){
@@ -40,11 +72,7 @@ var __main = function() {
     game.registerAction('f', function(){
         ball.fire();
     })
-    window.addEventListener('keydown', function(event){
-        if (event.key == 'p') {
-            paused = !paused;
-        }
-    })
+    
 
     game.updata = function() {
         if (paused) {

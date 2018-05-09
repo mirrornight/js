@@ -23,8 +23,9 @@ var GuaGame = function(fps) {
     g.registerAction = function(key, callback) {
         g.actions[key] = callback;
     }
-    // timer
-    setInterval(function(){
+    // timer 这里g.updata();不是很理解，闭包？
+    window.fps = 60;
+    var runloop = function() {
         var actions = Object.keys(g.actions);
         for (var i = 0; i < actions.length; i++) {
             var key = actions[i];
@@ -35,6 +36,12 @@ var GuaGame = function(fps) {
         g.updata();
         context.clearRect(0, 0, canvas.width, canvas.height);
         g.draw();
+        setTimeout(function(){
+            runloop()
+        }, 1000/window.fps)
+    }
+    setTimeout(function(){
+        runloop()
     }, 1000/fps)
 
     return g;
