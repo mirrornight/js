@@ -1,12 +1,16 @@
 // 改为对象
-var Board = function() {
-    var image = imageFormPath('board.png');
-    var o = {
-        image: image,
-        x: 200,
-        y: 500,
-        speed: 8,
-    }
+var Board = function(game) {
+    var o = game.imageByName('board');
+    // var o = {
+    //     image: image,
+    //     x: 200,
+    //     y: 500,
+    //     speed: 8,
+    // }
+    o.x = 200;
+    o.y = 500;
+    o.speed = 8;
+
     o.move = function(x) {
         if (o.x < 0) {
             o.x = 0;

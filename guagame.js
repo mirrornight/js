@@ -1,7 +1,10 @@
-var GuaGame = function(fps) {
+var GuaGame = function(fps, images, runCallback) {
+    // images 是一个对象，里面是图片的引用名字和图片路径
+    // 程序会在所有图片载入成功后才运行
     var g = {
         actions: {},
         keydowns: {},
+        images: {},
     }
     var canvas = document.querySelector('#id-canvas');
     var context = canvas.getContext('2d');
@@ -24,6 +27,10 @@ var GuaGame = function(fps) {
         g.actions[key] = callback;
     }
     // timer 这里g.updata();不是很理解，闭包？
+    //setTimeout(...0)所表达的意思是：等待0秒后（这个时间由第二个参数值确定），
+    // 往消息队列插入一条定时器事件消息，并将其第一个参数作为回调函数；
+    // 而当执行栈内同步任务执行完毕时，线程从消息队列读取消息，将该异步任务入栈，
+    // 执行；线程空闲时再次从消息队列读取消息。
     window.fps = 60;
     var runloop = function() {
         var actions = Object.keys(g.actions);
@@ -40,9 +47,45 @@ var GuaGame = function(fps) {
             runloop()
         }, 1000/window.fps)
     }
-    setTimeout(function(){
-        runloop()
-    }, 1000/fps)
+
+    var loads = [];
+    // 预先载入所有图片
+    var names = Object.keys(images);
+    for (var i = 0; i < names.length; i++) {
+        let name = names[i];
+        var path = images[name];
+        let img = new Image();
+        img.src = path;
+        img.onload = function() {
+            // 存入 g.images 中
+            g.images[name] = img;
+            // 所有图片都成功载入之后, 调用 run
+            loads.push(1);
+            log('load images', loads.length, names.length)
+            if (loads.length == names.length) {
+                log('load images', g.images);
+                g.run();
+            }
+        }
+    }
+    g.imageByName = function(name) {
+        log('image by name', g.images);
+        var img = g.images[name];
+        var image = {
+            w: img.width,
+            h: img.height,
+            image: img,
+        }
+        return image;
+    }
+    g.run = function() {
+        runCallback(g);
+        // 开始运行程序
+        setTimeout(function(){
+            runloop()
+        }, 1000/fps)
+    }
+    
 
     return g;
 }

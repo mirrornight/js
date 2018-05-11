@@ -1,13 +1,20 @@
-var Ball = function() {
-    var image = imageFormPath('ball.png');
-    var o = {
-        image: image,
-        x: 200,
-        y: 500,
-        speedX: 10,
-        speedY: 10,
-        fired: false,
-    }
+var Ball = function(game) {
+    // var image = imageFormPath('ball.png');
+    var o = game.imageByName('ball');
+    // var o = {
+    //     image: image,
+    //     x: 200,
+    //     y: 500,
+    //     speedX: 10,
+    //     speedY: 10,
+    //     fired: false,
+    // }
+    o.x = 200;
+    o.y = 500;
+    o.speedX = 10;
+    o.speedY = 10;
+    o.fired = false;
+    
     o.move = function() {
         if (o.fired) {
             // console.log('move');

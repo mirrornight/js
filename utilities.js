@@ -1,3 +1,9 @@
+var log = console.log.bind(console);
+
+// var log = function(s) {
+//     document.querySelector('#id-text-log').value += '\n' + s;
+// }
+
 var imageFormPath = function(path) {
     var img = new Image();
     img.src = path;
