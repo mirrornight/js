@@ -80,6 +80,37 @@ var __main = function() {
             }
             
         }
+        var enableDrag = false;
+        // mouse event
+        game.canvas.addEventListener('mousedown', function(event) {
+            var x = event.offsetX;
+            var y = event.offsetY;
+            log('mousedown', x, y);
+            // 检查是否点中了ball
+            if (ball.hasPoint(x, y)) {
+                //设置拖拽状态
+                enableDrag = true;
+            }
+        })
+
+        game.canvas.addEventListener('mousemove', function(event) {
+            log(event);
+            var x = event.offsetX;
+            var y = event.offsetY;   
+            if (enableDrag) {
+                log('mousemove', x, y);
+                ball.x = x;
+                ball.y = y;
+            }
+        })
+
+        game.canvas.addEventListener('mouseup', function(event) {
+            log(event);
+            var x = event.offsetX;
+            var y = event.offsetY;
+            log('mouseup', x, y);
+            enableDrag = false;
+        })
 
         game.draw = function() {
             game.drawImage(board);
@@ -94,7 +125,6 @@ var __main = function() {
         } 
     });
     enableDebugMode(game, true);
-    
 }
 
 __main();

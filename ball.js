@@ -14,7 +14,7 @@ var Ball = function(game) {
     o.speedX = 10;
     o.speedY = 10;
     o.fired = false;
-    
+
     o.move = function() {
         if (o.fired) {
             // console.log('move');
@@ -33,6 +33,11 @@ var Ball = function(game) {
     }
     o.rebound = function() {
         o.speedY *= -1;
+    }
+    o.hasPoint = function(x, y) {
+        var xIn = x >= o.x && x <= o.x + o.w;
+        var yIn = y >= o.y && y <= o.y + o.h;
+        return xIn && yIn;
     }
     return o;
 }
