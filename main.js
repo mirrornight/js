@@ -37,13 +37,13 @@ var bricks = [];
 var __main = function() {
     
     var imags = {
-        ball: 'ball.png',
-        board: 'board.png',
-        brick: 'brick.png',
+        ball: 'img/ball.png',
+        board: 'img/board.png',
+        brick: 'img/brick.png',
     }
             
-    var game = GuaGame(60, imags, function(g) {
-        var s = Scene(g);
+    var game = new GuaGame(60, imags, function(g) {
+        var s = SceneTitle.new(g);
         g.runWithScene(s);
     });
     enableDebugMode(game, true);

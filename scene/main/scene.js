@@ -31,9 +31,9 @@ var Scene = function(game) {
     }
     s.update = function() {
         // 判断游戏结束
-        if (ball.y > board.y) {
+        if (ball.y > game.canvas.height) {
             // 跳转到游戏结束的场景
-            var end = SceneEnd(game);
+            var end = SceneEnd.new(game);
             game.replaceScene(end);
         }
         if (paused) {

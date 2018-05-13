@@ -10,7 +10,7 @@ var Ball = function(game) {
     //     fired: false,
     // }
     o.x = 200;
-    o.y = 500;
+    o.y = 500 - o.h;
     o.speedX = 10;
     o.speedY = 10;
     o.fired = false;
