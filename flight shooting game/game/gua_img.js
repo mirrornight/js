@@ -1,5 +1,6 @@
 class GuaImg {
     constructor(game, name) {
+        this.game = game
         this.texture = game.imageByName(name)
         this.x = 0
         this.y = 0

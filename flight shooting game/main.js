@@ -26,9 +26,11 @@ var __main = function() {
     
     var imags = {
         background: 'img/background.png',
+        cloud: 'img/cloud.png',
         player: 'img/player.png',
         bullet: 'img/bullet.png',
         enemy1: 'img/enemy1.png',
+        enemy2: 'img/enemy2.png',
     }
             
     var game = new GuaGame(60, imags, function(g) {
