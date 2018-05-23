@@ -4,11 +4,6 @@ var log = console.log.bind(console);
 //     document.querySelector('#id-text-log').value += '\n' + s;
 // }
 
-var imageFormPath = function(path) {
-    var img = new Image();
-    img.src = path;
-    return img;
-}
 
 // 矩形相交
 var rectIntersects = function(a, b) {
@@ -20,6 +15,7 @@ var rectIntersects = function(a, b) {
     return false;
 }
 
+// 随机返回start，end这个闭区间中的一个整数值
 const randomBetween = function(start, end) {
     var n = Math.random() * (end - start + 1)
     return Math.floor(n + start)

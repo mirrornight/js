@@ -111,14 +111,15 @@ class Scene extends GuaScene {
         this.setupInputs()
     }
     setup() {
-        this.bg = GuaImg.new(this.game, 'background')
+        // 配置敌机数量
         this.numofenemies = 5
-        // this.player = GuaImg.new(this.game, 'player')
-        // this.player.x = 200
-        // this.player.y = 500
+
+        // 初始化图片
+        this.bg = GuaImg.new(this.game, 'background')
         this.player = new Player(this.game)
         this.cloud = new Cloud(this.game)
 
+        // 将图片添加到场景中去
         this.addelements(this.bg)
         this.addelements(this.cloud)
         this.addelements(this.player)

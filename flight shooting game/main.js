@@ -6,8 +6,6 @@ var enableDebugMode = function(game, enable) {
     window.addEventListener('keydown', function(event){
         if (event.key == 'p') {
             paused = !paused;
-        } else if ('123456789'.includes(event.key)) {
-            // bricks = loadLevel(game, Number(event.key));
         }
     })
     // 控制速度
@@ -20,7 +18,6 @@ var enableDebugMode = function(game, enable) {
 
 
 var paused = false;
-var bricks = [];
 
 var __main = function() {
     

@@ -18,11 +18,3 @@ class GuaImg {
 
     }
 }
-
-
-// class Player extends GuaImg {
-//     constructor(game, name) {
-//         super(game, name)
-        
-//     }
-// }

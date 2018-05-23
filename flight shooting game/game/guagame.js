@@ -49,6 +49,8 @@ class GuaGame {
             g.runloop()
         }, 1000/window.fps)
     }
+
+    // 等待图片载入完后调用run方法（执行传入game中的函数）
     init() {
         var g = this
         var loads = [];
@@ -91,6 +93,7 @@ class GuaGame {
             g.runloop()
         }, 1000/window.fps)
     }
+
     run() {
         this.runCallback(this);
     }
